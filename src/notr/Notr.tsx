@@ -32,9 +32,6 @@ import {DocumentTextIcon, FolderOpenIcon, PencilIcon, ViewColumnsIcon} from '@he
 import {DragHandlePlugin, SlashInsertPlugin, buildOptions, formatText} from './EditorPlugins';
 import {NOTES_MARKDOWN, NOTES_NAME, README_MARKDOWN, README_NAME, SAMPLE_MARKDOWN, SAMPLE_NAME} from './sample';
 
-/** Build fingerprint. Lives only in markup attributes; never drawn. */
-export const NOTR_BUILD = '05SA-EVI7-GUXA-GG52';
-
 type Doc = {name: string; folder: string; markdown: string};
 type Mode = 'read' | 'write';
 type Stock = 'grid' | 'ruled' | 'plain';
@@ -182,7 +179,7 @@ function Welcome({recent, onOpen}: {recent: Doc[]; onOpen: (d: Doc) => void}) {
 
   return (
     <AppShell height="fill" variant="surface" contentPadding={0}>
-      <VStack hAlign="center" className="notr-desk notr-welcome-desk" minHeight="100%" padding={10} data-notr-build={NOTR_BUILD}>
+      <VStack hAlign="center" className="notr-desk notr-welcome-desk" minHeight="100%" padding={10}>
         <VStack className="notr-page notr-stock-grid notr-welcome" gap={6}>
           <Text className="notr-tape" type="label">
             START HERE
@@ -240,7 +237,8 @@ function Welcome({recent, onOpen}: {recent: Doc[]; onOpen: (d: Doc) => void}) {
 
 function Notebook({doc, recent, onOpen, onClose}: {doc: Doc; recent: Doc[]; onOpen: (d: Doc) => void; onClose: () => void}) {
   const {front, body: initialBody} = useMemo(() => splitFrontMatter(doc.markdown), [doc.markdown]);
-  const [mode, setMode] = useState<Mode>('read');
+  // An empty page has nothing to read, so it opens ready to type.
+  const [mode, setMode] = useState<Mode>(() => (initialBody.trim() === '' ? 'write' : 'read'));
   const [body, setBody] = useState(initialBody);
   const [live, setLive] = useState(initialBody);
   const [saved, setSaved] = useState(initialBody);
@@ -297,6 +295,14 @@ function Notebook({doc, recent, onOpen, onClose}: {doc: Doc; recent: Doc[]; onOp
     keepScroll.current = null;
     return () => cancelAnimationFrame(raf);
   }, [mode]);
+
+  /* A page that opens in Write (a new, empty one) gets the cursor straight away. */
+  const startsInWrite = useRef(mode === 'write');
+  useEffect(() => {
+    if (!startsInWrite.current) return;
+    const raf = requestAnimationFrame(() => editorRef.current?.focus());
+    return () => cancelAnimationFrame(raf);
+  }, []);
 
   const save = useCallback(async (): Promise<boolean> => {
     const md = currentBody();
@@ -505,7 +511,7 @@ function Notebook({doc, recent, onOpen, onClose}: {doc: Doc; recent: Doc[]; onOp
         }
         content={
           <LayoutContent padding={0} label="Page" ref={scrollRef}>
-            <VStack hAlign="center" className="notr-desk" minHeight="100%" data-notr-build={NOTR_BUILD}>
+            <VStack hAlign="center" className="notr-desk" minHeight="100%">
               <VStack
                 className={`notr-page notr-stock-${stock} notr-doc`}
                 style={{['--notr-size' as string]: `${size}px`}}>

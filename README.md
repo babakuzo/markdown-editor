@@ -17,6 +17,7 @@ Notr opens any `.md` file as a clean, readable page. When you want to change som
 ## Features
 
 - **Read and Write modes.** Press `E` to start writing and `Esc` to go back to reading. Your scroll position stays put.
+- **A blank page to start.** Launch Notr and start typing, or open any `.md` file to read it.
 - **No Markdown syntax to learn.** Headings, checklists, tables, code blocks and links are all point and click.
 - **An outline of every page** so long documents are easy to move around.
 - **Paper and type settings:** grid, lined or plain paper, and adjustable text size.

@@ -14,6 +14,12 @@ import UniformTypeIdentifiers
 
 @main
 struct NotrApp: App {
+  init() {
+    // Open a new blank document at launch, like a fresh page, instead of
+    // macOS's default Open panel for document apps.
+    UserDefaults.standard.register(defaults: ["NSShowAppCentricOpenPanelInsteadOfUntitledFile": false])
+  }
+
   var body: some Scene {
     DocumentGroup(newDocument: MarkdownDocument()) { file in
       EditorView(document: file.$document, fileName: file.fileURL?.lastPathComponent ?? "Untitled.md")
@@ -34,7 +40,7 @@ struct MarkdownDocument: FileDocument {
 
   var text: String
 
-  init(text: String = "# Untitled\n") {
+  init(text: String = "") {
     self.text = text
   }
 
