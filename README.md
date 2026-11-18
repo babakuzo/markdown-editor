@@ -114,6 +114,22 @@ git push origin v0.2.0
 
 The **Release** workflow builds a universal `Notr.app` on a macOS runner, packages `Notr-0.2.0.dmg` with a SHA-256 checksum, and publishes a GitHub release. You can also run it by hand from the Actions tab, which creates a draft release.
 
+### Notarize on your own Mac
+
+With a Developer ID Application certificate in your keychain, save your notarization credentials once (it asks for an [app-specific password](https://support.apple.com/102654)):
+
+```bash
+xcrun notarytool store-credentials notr --apple-id you@example.com --team-id TEAMID
+```
+
+Then build, sign, notarize and staple in one step:
+
+```bash
+SIGNING_IDENTITY="Developer ID Application: Your Name (TEAMID)" NOTARY_PROFILE=notr make notarize
+```
+
+The result is `build/Notr-<version>.dmg` with a matching `.sha256`, ready to attach to a release.
+
 ### Signed and notarized releases
 
 With an [Apple Developer Program](https://developer.apple.com/programs/) membership, releases can be signed and notarized so they open without any warning. Add these repository secrets under **Settings > Secrets and variables > Actions**:

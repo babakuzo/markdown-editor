@@ -3,13 +3,14 @@
 #   make dev     Run the editor in a browser at http://localhost:3000
 #   make app     Build Notr.app (needs macOS, Xcode 16+, XcodeGen)
 #   make dmg     Build Notr.app and package it as build/Notr-<version>.dmg
+#   make notarize  Build, sign with your Developer ID, notarize and staple the .dmg
 
 VERSION ?= $(shell node -p "require('./package.json').version")
 BUILD   ?= 1
 APP      = build/Release/Notr.app
 DMG      = build/Notr-$(VERSION).dmg
 
-.PHONY: help dev web project app dmg open clean
+.PHONY: help dev web project app dmg notarize open clean
 
 help:
 	@grep -E '^#   make' Makefile | sed 's/^#   //'
@@ -47,6 +48,11 @@ app: web project
 
 dmg: app
 	scripts/make-dmg.sh "$(APP)" "$(DMG)"
+
+# Needs SIGNING_IDENTITY plus NOTARY_PROFILE (or APPLE_ID, APPLE_TEAM_ID and
+# APPLE_APP_PASSWORD). See scripts/sign-and-notarize.sh.
+notarize: app
+	scripts/sign-and-notarize.sh "$(APP)" "$(DMG)"
 
 open: app
 	open "$(APP)"
