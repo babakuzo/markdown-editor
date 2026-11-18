@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <!-- Notr app icon: a taped sheet of grid paper with a notr. Source for mac/Notr/Assets.xcassets/AppIcon. -->
+  <defs>
+    <linearGradient id="desk" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f1ede4"/>
+      <stop offset="1" stop-color="#e2ddd1"/>
+    </linearGradient>
+    <pattern id="grid" width="36" height="36" patternUnits="userSpaceOnUse">
+      <path d="M36 0H0V36" fill="none" stroke="#d9e3ec" stroke-width="3"/>
+    </pattern>
+    <filter id="tileShadow" x="-10%" y="-10%" width="120%" height="125%">
+      <feDropShadow dx="0" dy="12" stdDeviation="14" flood-color="#000" flood-opacity="0.22"/>
+    </filter>
+    <filter id="paperShadow" x="-15%" y="-15%" width="130%" height="135%">
+      <feDropShadow dx="0" dy="14" stdDeviation="16" flood-color="#3b3325" flood-opacity="0.22"/>
+    </filter>
+    <clipPath id="tile"><rect x="100" y="100" width="824" height="824" rx="185"/></clipPath>
+  </defs>
+
+  <rect x="100" y="100" width="824" height="824" rx="185" fill="url(#desk)" filter="url(#tileShadow)"/>
+
+  <g clip-path="url(#tile)">
+    <g transform="rotate(-4 512 540)" filter="url(#paperShadow)">
+      <rect x="232" y="226" width="560" height="640" rx="10" fill="#fbf7ee"/>
+      <rect x="232" y="226" width="560" height="640" rx="10" fill="url(#grid)"/>
+      <rect x="300" y="350" width="300" height="46" rx="23" fill="#232a35"/>
+      <rect x="300" y="452" width="424" height="24" rx="12" fill="#5d6470" opacity="0.55"/>
+      <rect x="300" y="512" width="384" height="24" rx="12" fill="#5d6470" opacity="0.55"/>
+      <rect x="300" y="572" width="410" height="24" rx="12" fill="#5d6470" opacity="0.55"/>
+      <rect x="300" y="664" width="240" height="24" rx="12" fill="#5d6470" opacity="0.55"/>
+    </g>
+    <rect x="402" y="188" width="236" height="86" fill="#ebd9a8" opacity="0.95" transform="rotate(3 520 231)"/>
+  </g>
+
+  <path d="M748 224 C 760 300, 772 312, 848 324 C 772 336, 760 348, 748 424 C 736 348, 724 336, 648 324 C 724 312, 736 300, 748 224 Z"
+        fill="#f08a6b" stroke="#fbf7ee" stroke-width="14" stroke-linejoin="round"/>
+</svg>

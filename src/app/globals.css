@@ -1,0 +1,375 @@
+@import "@astryxdesign/core/reset.css";
+@import "@astryxdesign/core/astryx.css";
+@import "@astryxdesign/richtext/richtext.css";
+@import "@fontsource/fraunces/600.css";
+@import "@fontsource/fraunces/700.css";
+@import "@fontsource/literata/400.css";
+@import "@fontsource/literata/400-italic.css";
+@import "@fontsource/literata/700.css";
+@import "@fontsource-variable/recursive/full.css";
+
+/*
+ * Notr · Field Notebook
+ * A Markdown file is a notebook page taped to a desk. Ink for text, masking
+ * tape for state, and a small set of sticker colours for the things you can
+ * add. Each colour has one job:
+ *   coral  headings        tape  lists        sage  to-dos
+ *   sky    tables          stone everything else      ink  formatting
+ */
+:root {
+  --nb-desk: #e9e5dc;
+  --nb-paper: #fbf7ee;
+  --nb-rule: #d9e3ec;
+  --nb-ink: #232a35;
+  --nb-graphite: #5d6470;
+  --nb-tape: #ebd9a8;
+  --nb-tape-ink: #5f4f22;
+  --nb-coral: #f08a6b;
+  --nb-sage: #9cc5a1;
+  --nb-sky: #b9cbe0;
+  --nb-stone: #d8d2c4;
+  --nb-highlight: rgba(240, 138, 107, 0.35);
+  --nb-ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --nb-body: 'Literata', Georgia, serif;
+  --nb-display: 'Fraunces', Georgia, serif;
+  --nb-ui: 'Recursive Variable', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+::selection {
+  background: var(--nb-highlight);
+  color: var(--nb-ink);
+}
+
+* {
+  scrollbar-color: rgba(35, 42, 53, 0.28) transparent;
+}
+
+/* App chrome stays quiet: system face, never the page's ink colours. */
+.notr-ui-face {
+  font-family: var(--nb-ui);
+  font-variation-settings: 'CASL' 1;
+  letter-spacing: 0.1em;
+  color: var(--nb-graphite);
+}
+.notr-display-face {
+  font-family: var(--nb-display);
+}
+.notr-italic {
+  font-style: italic;
+}
+.notr-body-face {
+  font-family: var(--nb-body);
+}
+
+/* Title: file name truncates in the middle of the bar, never pushes controls. */
+.notr-title {
+  min-width: 0;
+}
+.notr-filename {
+  min-width: 0;
+}
+.notr-edited {
+  flex-shrink: 0;
+  opacity: 0.55;
+  transition: opacity 150ms var(--nb-ease-out);
+}
+.notr-edited.is-on {
+  opacity: 1;
+  color: var(--nb-ink);
+}
+.notr-edited.is-on::before {
+  content: '';
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin-inline-end: 6px;
+  border-radius: 50%;
+  background: var(--nb-coral);
+  vertical-align: 1px;
+}
+
+/* The desk. */
+/* The Mac app adds .notr-native before first paint; its window always opens a file. */
+.notr-native .notr-welcome-desk {
+  visibility: hidden;
+}
+
+.notr-desk {
+  background: var(--nb-desk);
+  padding: 56px 24px 160px;
+}
+
+/* The page: the same box in Read and Write, so nothing ever moves. */
+.notr-page {
+  --notr-size: 18px;
+  position: relative;
+  width: min(720px, 100%);
+  box-sizing: border-box;
+  padding: 80px 80px 96px;
+  background-color: var(--nb-paper);
+  box-shadow: 0 1px 2px rgba(35, 42, 53, 0.08), 0 22px 44px -26px rgba(35, 42, 53, 0.4);
+  caret-color: #e0603d;
+  transition: background-color 200ms ease;
+}
+.notr-stock-grid {
+  background-image:
+    linear-gradient(var(--nb-rule) 1px, transparent 1px),
+    linear-gradient(90deg, var(--nb-rule) 1px, transparent 1px);
+  background-size: 22px 22px;
+  background-position: -1px -1px;
+}
+.notr-stock-ruled {
+  background-image: linear-gradient(transparent calc(1.75em - 1px), var(--nb-rule) calc(1.75em - 1px), var(--nb-rule) 1.75em);
+  background-size: 100% 1.75em;
+  font-size: var(--notr-size);
+}
+.notr-welcome {
+  padding: 72px 64px 64px;
+}
+
+/* Masking tape: shows the mode. Swaps instantly, because E and ⌘E are
+   pressed many times a session. */
+.notr-tape {
+  position: absolute;
+  top: -15px;
+  left: 50%;
+  transform: translateX(-50%) rotate(1.4deg);
+  min-width: 150px;
+  padding: 9px 22px;
+  text-align: center;
+  background: rgba(235, 217, 168, 0.9);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+  font-family: var(--nb-ui) !important;
+  font-variation-settings: 'CASL' 1;
+  font-weight: 700 !important;
+  font-size: 12px !important;
+  letter-spacing: 0.16em;
+  color: var(--nb-tape-ink) !important;
+  user-select: none;
+}
+
+/* Writing on the page: headings in Fraunces, body in Literata. */
+.notr-doc h1,
+.notr-doc h2,
+.notr-doc h3,
+.notr-welcome h1 {
+  font-family: var(--nb-display) !important;
+  color: var(--nb-ink);
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+.notr-doc h1,
+.notr-welcome h1 {
+  font-size: 40px !important;
+  line-height: 1.1 !important;
+}
+.notr-doc h2 {
+  font-size: 24px !important;
+  line-height: 1.3 !important;
+}
+.notr-doc .astryx-markdown-paragraph,
+.notr-doc .astryx-markdown-list li,
+.notr-doc .astryx-markdown-list li *:not(code),
+.notr-doc .astryx-markdown-blockquote,
+.notr-doc .astryx-markdown-blockquote *:not(code),
+.notr-doc [contenteditable] p,
+.notr-doc [contenteditable] li,
+.notr-doc [contenteditable] blockquote {
+  font-family: var(--nb-body);
+  font-size: var(--notr-size);
+  line-height: 1.75;
+  color: var(--nb-ink);
+}
+.notr-doc .astryx-markdown-table td,
+.notr-doc .astryx-markdown-table th,
+.notr-doc .astryx-markdown-table td *:not(code),
+.notr-doc .astryx-markdown-table th *:not(code),
+.notr-doc [contenteditable] td,
+.notr-doc [contenteditable] th,
+.notr-doc [contenteditable] td *,
+.notr-doc [contenteditable] th * {
+  font-family: var(--nb-body);
+  font-size: calc(var(--notr-size) - 2px);
+}
+.notr-doc .astryx-markdown-table table,
+.notr-doc [contenteditable] table {
+  background: rgba(251, 247, 238, 0.92);
+}
+.notr-doc [contenteditable] td,
+.notr-doc [contenteditable] th {
+  min-height: 2.2em;
+}
+.notr-doc blockquote,
+.notr-doc .astryx-markdown-blockquote {
+  font-style: italic;
+}
+.notr-doc pre,
+.notr-doc .astryx-markdown-code-block pre {
+  white-space: pre;
+  overflow-x: auto;
+}
+.notr-doc img {
+  max-width: 100%;
+}
+
+/* In Write mode the editor is the page: no field frame, no extra padding. */
+.notr-doc .astryx-rich-text-editor.astryx-rich-text-editor,
+.notr-doc .astryx-rich-text-editor:hover,
+.notr-doc .astryx-rich-text-editor:focus-within {
+  background: transparent;
+  border-color: transparent !important;
+  box-shadow: none;
+  outline: none;
+}
+.notr-doc [contenteditable] {
+  padding: 0;
+  outline: none;
+}
+/* Astryx's read/edit-in-place recipe: put the field's inset (8px padding +
+   1px border) outside the reading column, so every line keeps its place. */
+.notr-doc > .astryx-field {
+  margin: -5px -9px 0;
+  width: calc(100% + 18px);
+}
+
+/* Word count under the page, like a page number. */
+.notr-count {
+  margin-top: 14px;
+  font-family: var(--nb-ui);
+  font-variation-settings: 'CASL' 1;
+}
+
+/* Recent files: paper slips, a little askew, no colour fills. */
+.notr-slip {
+  background: #fffdf7 !important;
+  border-radius: 2px !important;
+  box-shadow: 0 1px 2px rgba(35, 42, 53, 0.1), 0 6px 14px -10px rgba(35, 42, 53, 0.35) !important;
+}
+.notr-slip-0 { transform: rotate(-0.8deg); }
+.notr-slip-1 { transform: rotate(0.6deg); }
+.notr-slip-2 { transform: rotate(-0.3deg); }
+
+/* The sticker tray: the one way to add things besides "/". */
+.notr-tray {
+  position: sticky;
+  bottom: 22px;
+  width: max-content;
+  margin: -120px auto 0;
+  padding: 12px 20px 10px;
+  border-radius: 999px;
+  background: var(--nb-ink);
+  box-shadow: 0 16px 34px -14px rgba(35, 42, 53, 0.6);
+  z-index: 5;
+}
+.notr-tray-label {
+  font-family: var(--nb-ui) !important;
+  font-variation-settings: 'CASL' 1;
+  font-weight: 600 !important;
+  font-size: 11px !important;
+  color: #f3eee2 !important;
+}
+.notr-tray-rule {
+  width: 1px;
+  height: 40px;
+  margin-bottom: 18px;
+  background: rgba(251, 247, 238, 0.22);
+}
+.notr-sticker.notr-sticker {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 0;
+  color: var(--nb-ink);
+  box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.12);
+  transition: transform 160ms var(--nb-ease-out);
+}
+.notr-sticker:active {
+  transform: scale(0.94) rotate(-4deg);
+}
+.notr-sticker-coral { background: var(--nb-coral) !important; }
+.notr-sticker-tape { background: var(--nb-tape) !important; }
+.notr-sticker-sage { background: var(--nb-sage) !important; }
+.notr-sticker-sky { background: var(--nb-sky) !important; }
+.notr-sticker-stone { background: var(--nb-stone) !important; }
+.notr-sticker-ink.notr-sticker-ink {
+  background: transparent !important;
+  color: #fbf7ee;
+  box-shadow: inset 0 0 0 1.5px rgba(251, 247, 238, 0.5);
+}
+.notr-sticker-ink * {
+  color: #fbf7ee !important;
+}
+
+/* The "/" menu sits above the tray and scrolls rather than running under it. */
+.notr-slash {
+  position: relative;
+  z-index: 20;
+  max-height: 340px;
+  overflow-y: auto;
+}
+
+/* The same stickers, small, in the "/" menu. */
+.notr-dot {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--nb-ink);
+}
+
+/* Drag handle in the page's left margin; drop line in ink. */
+.notr-editor-anchor {
+  position: relative;
+}
+.notr-drag-menu {
+  position: absolute;
+  inset-inline-start: 0;
+  inset-block-start: 0;
+  margin-inline-start: 42px;
+  opacity: 0;
+  will-change: transform;
+  transition: opacity 120ms var(--nb-ease-out) 150ms;
+}
+.notr-drop-line {
+  position: absolute;
+  inset-inline-start: 0;
+  inset-block-start: 0;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--nb-coral);
+  opacity: 0;
+  pointer-events: none;
+  will-change: transform;
+}
+
+/* Press feedback, with a transition on the way back too. */
+button {
+  transition: transform 160ms var(--nb-ease-out), background-color 150ms ease, color 150ms ease;
+}
+button:active:not([aria-disabled='true']) {
+  transform: scale(0.97);
+}
+
+/* Narrow windows: keep a readable page. */
+@media (max-width: 900px) {
+  .notr-page { padding: 64px 32px 72px; }
+  .notr-welcome { padding: 64px 28px 48px; }
+  .notr-desk { padding: 40px 12px 160px; }
+  .notr-tray { padding: 10px 14px 8px; }
+  .notr-tray .notr-tray-label { display: none; }
+  .notr-tray-rule { margin-bottom: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  button:active { transform: none; }
+  .notr-sticker:active { transform: none; }
+  .notr-slip-0, .notr-slip-1, .notr-slip-2 { transform: none; }
+  .notr-drag-menu { transition: opacity 120ms ease; }
+}

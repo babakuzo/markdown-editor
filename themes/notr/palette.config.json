@@ -1,0 +1,44 @@
+{
+  "modeStrategy": "light-and-dark",
+  "families": [
+    {
+      "id": "accent",
+      "name": "Accent",
+      "seed": "#232a35",
+      "anchors": [
+        {
+          "mode": "light",
+          "stop": 15,
+          "color": "#232a35",
+          "policy": "exact"
+        },
+        {
+          "mode": "dark",
+          "stop": 15,
+          "color": "#232a35",
+          "policy": "exact"
+        }
+      ]
+    },
+    {
+      "id": "neutral",
+      "name": "Neutral",
+      "seed": "#6f6a5e",
+      "kind": "neutral",
+      "anchors": [
+        {
+          "mode": "light",
+          "stop": 45,
+          "color": "#6f6a5e",
+          "policy": "exact"
+        },
+        {
+          "mode": "dark",
+          "stop": 45,
+          "color": "#6f6a5e",
+          "policy": "exact"
+        }
+      ]
+    }
+  ]
+}

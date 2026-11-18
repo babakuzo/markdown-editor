@@ -1,0 +1,51 @@
+{
+  "name": "notr",
+  "like": "neutral",
+  "mode": "light-only",
+  "settings": [
+    {
+      "thing": "font",
+      "value": "sans",
+      "source": "dial"
+    },
+    {
+      "thing": "corners",
+      "value": "round",
+      "source": "dial"
+    },
+    {
+      "thing": "font",
+      "value": "system",
+      "source": "dial",
+      "on": "body"
+    },
+    {
+      "thing": "accent",
+      "value": "#232A35",
+      "source": "dial"
+    },
+    {
+      "thing": "neutral",
+      "value": "#6F6A5E",
+      "source": "dial"
+    },
+    {
+      "thing": "--color-background-body",
+      "value": "#E9E5DC",
+      "source": "token"
+    },
+    {
+      "thing": "--color-background-surface",
+      "value": "#FBF7EE",
+      "source": "token"
+    },
+    {
+      "thing": "font",
+      "value": "Fraunces",
+      "source": "dial",
+      "on": "heading"
+    }
+  ],
+  "lifted": [],
+  "palette": "fe0f4172120db839ba0f14d4a22fe3e82b34a7a316db614d3b3686071822b1c7"
+}
