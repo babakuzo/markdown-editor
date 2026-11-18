@@ -34,6 +34,10 @@ struct EditorView: NSViewRepresentable {
     webView.navigationDelegate = context.coordinator
     webView.uiDelegate = context.coordinator
     webView.setValue(false, forKey: "drawsBackground") // no white flash before first paint
+    if #available(macOS 13.3, *) {
+      // Lets Safari's Web Inspector attach (Develop > this Mac > Notr) to debug the editor.
+      webView.isInspectable = true
+    }
     context.coordinator.push(name: fileName, markdown: document.text, to: webView)
 
     if let index = Bundle.main.url(forResource: "index", withExtension: "html", subdirectory: "web") {
@@ -78,7 +82,10 @@ struct EditorView: NSViewRepresentable {
       }
       let payload: [String: String] = ["name": name, "folder": "", "markdown": markdown]
       webView.callAsyncJavaScript(
-        "window.notrOpen?.(doc)", arguments: ["doc": payload], in: nil, in: .page
+        // The page may still be hydrating when it finishes loading. If its
+        // receiver isn't there yet, leave the file for it to pick up on mount.
+        "if (window.notrOpen) { window.notrOpen(doc) } else { window.notrPending = doc }",
+        arguments: ["doc": payload], in: nil, in: .page
       ) { result in
         if case .failure(let error) = result {
           log.error("Could not open the file in the editor: \(error.localizedDescription, privacy: .public)")

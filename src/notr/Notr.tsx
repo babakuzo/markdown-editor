@@ -97,6 +97,8 @@ function useIsNative(): boolean {
 declare global {
   interface Window {
     notrOpen?: (doc: {name: string; folder: string; markdown: string}) => void;
+    /** A file the Mac app handed over before React was ready to receive it. */
+    notrPending?: {name: string; folder: string; markdown: string};
   }
 }
 
@@ -139,6 +141,11 @@ export function Notr() {
 
   useEffect(() => {
     window.notrOpen = d => open(d);
+    const pending = window.notrPending;
+    if (pending) {
+      delete window.notrPending;
+      open(pending);
+    }
     return () => {
       delete window.notrOpen;
     };
